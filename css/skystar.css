@@ -35,6 +35,7 @@ div {
 .word-box,
 .word-box .word{
 position: absolute;
+will-change: transform;
 animation: rotY 0s linear infinite;
 animation-duration: var(--animation-duration);
 animation-delay: var(--animation-delay);

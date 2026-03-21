@@ -41,6 +41,7 @@ function randomNum(min,max){
 }
 function init(){
     let container = document.querySelector('.container');
+    if (!container) return;
     let f = document.createDocumentFragment();
     words.forEach(w=>{
     let word_box = document.createElement('div');
@@ -66,15 +67,7 @@ function init(){
     })
     container.appendChild(f);
 }
-window.addEventListener('load',init);
-let textone = document.querySelector('.textone').querySelector('h1');
-      let text = document.querySelector('.text').querySelector('h1');
-      setTimeout(function(){
-        textone.innerHTML = '今晚，整片星空将为你一人闪烁';
-          textone.style.color = '#E8F9FD';
-          textone.style.fontFamily = "'LXGW WenKai Lite', '楷体', 'KaiTi', 'STKaiti', serif";
-          text.innerHTML = '';
-      },28000)
+document.addEventListener('DOMContentLoaded',init);
 
 
  
