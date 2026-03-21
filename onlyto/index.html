@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>杨敏</title>
+    <style>
+      #videofilm {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+      }
+      .confession-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 10;
+        width: 75%; /* 减小宽度，让它不要填满手机屏幕左右边缘 */
+        max-width: 320px;
+        background: rgba(0, 0, 0, 0.05); /* 背景透明度再次降低，几乎完全通透 */
+        padding: 20px 20px 25px 20px; /* 减小上下左右的内边距，使框的长宽更紧凑协调 */
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.05); /* 阴影也相应减弱 */
+        backdrop-filter: blur(1px); /* 进一步降低毛玻璃模糊感 */
+      }
+      .confession-container h1 {
+        font-size: 24px; /* 字号稍微改小一点点适应更精巧的框 */
+        color: #ffb6c1; /* 浅粉色比较温馨浪漫 */
+        font-family: 'LXGW WenKai Lite', '楷体', 'KaiTi', 'STKaiti', cursive;
+        line-height: 1.6;
+        margin-bottom: 25px;
+        text-shadow: 0 0 10px rgba(255, 182, 193, 0.8);
+      }
+      .buttons {
+        display: flex;
+        justify-content: space-around;
+        gap: 20px;
+      }
+      .buttons button {
+        padding: 12px 30px;
+        font-size: 18px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.3s ease;
+      }
+      #btn-agree {
+        background: #ff69b4;
+        color: white;
+        box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+      }
+      #btn-agree:active {
+        transform: scale(0.95);
+      }
+      #btn-disagree {
+        background: #888;
+        color: #ccc;
+        cursor: not-allowed;
+        /* 或者如果想做成悬浮跑掉的按钮，可以用JS实现，但目前要求是点不动 */
+      }
+      @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 105, 180, 0.4); }
+        50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 105, 180, 0.8); }
+        100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 105, 180, 0.4); }
+      }
+    </style>
+    <!-- 引入免费的开源云端楷体字体：霞鹜文楷，专门适配手机端不支持楷体的问题 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+    <link rel="stylesheet" href="css/skystar.css">
+  </head>
+  <body>
+    <!-- 背景视频保持静音循环播放 -->
+    <video id="videofilm" muted loop playsinline="true" webkit-playsinline="true" x5-playsinline="true">
+      <source src="video/skystar.mp4" type="video/mp4">
+    </video>
+    
+    <!-- 添加背景音乐 -->
+    <audio id="bgm" src="video/KEY.L刘聪、$CC731 - MY BOO.mp3" loop></audio>
+
+    <!-- 第一页：入口层 -->
+    <div id="start-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; background: #000; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+      <h1 style="color: #ffb6c1; margin-bottom: 40px; font-family: 'LXGW WenKai Lite', '楷体', cursive; font-size: 24px;">收到一封给你的专属信件</h1>
+      <button onclick="startJourney()" style="padding: 15px 40px; font-size: 20px; border: none; border-radius: 30px; background: #ff69b4; color: white; cursor: pointer; box-shadow: 0 0 20px rgba(255, 105, 180, 0.6); animation: pulse 2s infinite; font-family: 'LXGW WenKai Lite', '楷体', cursive;">点击开启</button>
+    </div>
+
+    <!-- 表白层（初始隐藏） -->
+    <div class="confession-container" id="confession-ui" style="display: none;">
+      <h1>杨敏 我喜欢你<br>你愿意做我女朋友吗</h1>
+      <div class="buttons">
+        <button id="btn-agree" onclick="goToNextPage()">同意</button>
+        <button id="btn-disagree" onclick="showCustomAlert()">不同意</button>
+      </div>
+    </div>
+    
+    <!-- 自定义拒绝提示框：替代原始的 alert() 避免浏览器拦截或询问关闭 -->
+    <div id="custom-alert" style="display: none; position: fixed; top: 20%; left: 50%; transform: translateX(-50%); background: rgba(255, 105, 180, 0.9); color: white; padding: 15px 25px; border-radius: 30px; z-index: 100000; font-family: 'LXGW WenKai Lite', '楷体', cursive; font-size: 16px; box-shadow: 0 4px 15px rgba(255,105,180,0.4); text-align: center; white-space: nowrap; opacity: 0; transition: opacity 0.3s ease;">不行哦，再好好想一想嘛~ (๑•́ ₃ •̀๑)</div>
+
+    <!-- 内嵌页面容器，预留淡入动画 -->
+    <iframe id="next-page-frame" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 9999; background: #000; opacity: 0; transition: opacity 1.5s ease;"></iframe>
+
+    <div class="container"></div>
+    <script src="js/skystar.js"></script>
+    <script>
+      let alertTimer = null;
+      function showCustomAlert() {
+        var alertBox = document.getElementById('custom-alert');
+        alertBox.style.display = 'block';
+        // 触发重绘以保证过渡动画生效
+        alertBox.offsetHeight; 
+        alertBox.style.opacity = '1';
+        
+        if(alertTimer) clearTimeout(alertTimer);
+        alertTimer = setTimeout(function() {
+          alertBox.style.opacity = '0';
+          setTimeout(function() {
+            alertBox.style.display = 'none';
+          }, 300); // 等待透明度过渡结束
+        }, 2000); // 弹窗显示2秒
+      }
+
+      function startJourney() {
+        document.getElementById('start-overlay').style.display = 'none';
+        document.getElementById('confession-ui').style.display = 'block';
+        
+        var bgm = document.getElementById('bgm');
+        var video = document.getElementById('videofilm');
+        
+        bgm.play().catch(e => console.log('BGM play failed:', e));
+        video.play().catch(e => console.log('Video play failed:', e));
+      }
+
+      function goToNextPage() {
+        // 先隐藏表白界面，让用户看到界面有实时反馈
+        document.getElementById('confession-ui').style.display = 'none';
+        
+        var frame = document.getElementById('next-page-frame');
+        // 显示iframe让它开始占据位置并加载
+        frame.style.display = 'block';
+        frame.src = '011/index.html';
+        
+        // 监听 iframe 加载完毕后再执行淡入过度，完美解决卡顿与黑屏闪烁问题
+        frame.onload = function() {
+          frame.style.opacity = '1';
+        };
+      }
+
+      // 解决浏览器禁止自动播放声音的问题：只要用户在页面随意点击或触碰一下屏幕，音乐就会开始播放
+      document.body.addEventListener('click', function() {
+        var bgm = document.getElementById('bgm');
+        if (bgm.paused) {
+          bgm.play();
+        }
+      }, { once: true });
+      document.body.addEventListener('touchstart', function() {
+        var bgm = document.getElementById('bgm');
+        if (bgm.paused) {
+          bgm.play();
+        }
+      }, { once: true });
+    </script>
+    
+  </body>
+</html>
