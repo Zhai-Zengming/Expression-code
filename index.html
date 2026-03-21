@@ -78,15 +78,16 @@
   </head>
   <body>
     <!-- 背景视频保持静音循环播放 -->
-    <video id="videofilm" muted loop playsinline="true" webkit-playsinline="true" x5-playsinline="true" preload="auto">
+    <video id="videofilm" muted loop playsinline="true" webkit-playsinline="true" x5-playsinline="true" preload="metadata">
       <source src="video/skystar.mp4" type="video/mp4">
     </video>
     
     <!-- 添加背景音乐 -->
-    <audio id="bgm" src="video/KEY.L刘聪、$CC731 - MY BOO.mp3" loop preload="auto"></audio>
+    <audio id="bgm" src="video/KEY.L刘聪、$CC731 - MY BOO.mp3" loop preload="none"></audio>
 
     <!-- 第一页：入口层 -->
     <div id="start-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; background: #000; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+      <div style="position: absolute; top: 15px; left: 15px; color: rgba(255,255,255,0.4); font-size: 12px; font-family: sans-serif;">测试版本: V1.0</div>
       <h1 style="color: #ffb6c1; margin-bottom: 40px; font-family: 'LXGW WenKai Lite', '楷体', cursive; font-size: 24px;">收到一封给你的专属信件</h1>
       <button onclick="startJourney()" style="padding: 15px 40px; font-size: 20px; border: none; border-radius: 30px; background: #ff69b4; color: white; cursor: pointer; box-shadow: 0 0 20px rgba(255, 105, 180, 0.6); animation: pulse 2s infinite; font-family: 'LXGW WenKai Lite', '楷体', cursive;">点击开启</button>
     </div>
@@ -152,19 +153,8 @@
         };
       }
 
-      // 解决浏览器禁止自动播放声音的问题：只要用户在页面随意点击或触碰一下屏幕，音乐就会开始播放
-      document.body.addEventListener('click', function() {
-        var bgm = document.getElementById('bgm');
-        if (bgm.paused) {
-          bgm.play();
-        }
-      }, { once: true });
-      document.body.addEventListener('touchstart', function() {
-        var bgm = document.getElementById('bgm');
-        if (bgm.paused) {
-          bgm.play();
-        }
-      }, { once: true });
+      // 移除原有的自动点击播放声音逻辑，统一交给点击按钮触发
+      // 避免并发冲突导致浏览器挂起 promise 拒绝
     </script>
     
   </body>
