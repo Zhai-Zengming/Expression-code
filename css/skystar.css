@@ -46,7 +46,7 @@ animation-delay: var(--animation-delay);
     margin-left: var(--margin-left);
 }
 .word-box .word {
-    animation-duration: reverse;
+    animation-direction: reverse;
 }
 @keyframes rotY {
     to{

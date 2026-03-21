@@ -9,8 +9,6 @@ var words=[
     '与君重逢',
     '一日不见兮',
     '思之若狂',
-    '好想回到那个夏天',
-    '趴在桌子上偷偷看你',
     '你是我灰色人生中的一道彩虹',
     '柳絮空缱绻',
     '南风知不知',
@@ -43,7 +41,13 @@ function init(){
     let container = document.querySelector('.container');
     if (!container) return;
     let f = document.createDocumentFragment();
-    words.forEach(w=>{
+    
+    let total = words.length;
+    // 将全部词句分层，每层几个词，形成漂亮的柱状圆环排列
+    let rows = 6;
+    let itemsPerRow = Math.ceil(total / rows);
+
+    words.forEach((w, index) => {
     let word_box = document.createElement('div');
     let word = document.createElement('div');
         word.innerHTML = w.split('').join('<br>'); // 用换行符把每个字分开，实现纯粹的从上到下排布
@@ -54,11 +58,27 @@ function init(){
         word.style.lineHeight = '1.3'; // 设置合理的行高
         word_box.classList.add('word-box');
         
-        // 词句靠上调得有些过了，现在稍微往下调一点，使其在手机上居中平衡
-        word_box.style.setProperty("--margin-top",randomNum(-45, 15)+'vh');
-        word_box.style.setProperty("--margin-left",randomNum(-40, 40)+'vw');
-        word_box.style.setProperty("--animation-duration",randomNum(8, 20)+'s');
-        word_box.style.setProperty("--animation-delay",randomNum(-20,0)+'s');
+        // --- 排版逻辑优化 ---
+        let row = Math.floor(index / itemsPerRow);
+        let col = index % itemsPerRow;
+        
+        // 高度分布：控制在手机能显示的范围内，大约-38vh 到 18vh 之间
+        let pTop = row / (rows - 1); // 0 到 1
+        let marginTop = -38 + pTop * 56; 
+        // 错开单双行的高度一点点，让长短句不至于严重撞车
+        marginTop += (col % 2) * 3; 
+
+        // 旋转轨道半径
+        let radius = 35 + (row % 2) * 5; // 周长设在 35vw 或 40vw
+        
+        // 将这一层的句子均匀分布在 360 度圆环上 (通过控制 delay 实现)
+        let duration = 18 + (row % 3) * 2; // 不要转太快，18-22秒一圈
+        let delay = -(col / itemsPerRow) * duration; 
+        
+        word_box.style.setProperty("--margin-top", marginTop + 'vh');
+        word_box.style.setProperty("--margin-left", radius + 'vw');
+        word_box.style.setProperty("--animation-duration", duration + 's');
+        word_box.style.setProperty("--animation-delay", delay + 's');
         
         word_box.appendChild(word);
         f.appendChild(word_box);
