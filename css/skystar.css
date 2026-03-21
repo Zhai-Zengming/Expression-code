@@ -4,12 +4,14 @@
 }
 body {
     height: 100vh;
+    height: 100dvh; /* 针对 iOS Safari 处理高度防止被遮挡 */
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     overflow: hidden;
     perspective: 1300px;
+    -webkit-text-size-adjust: 100%; /* 防止 iOS 旋转或双击时字体缩放 */
 }
 .text {
     position: absolute;
