@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>霓虹爱心</title>
+	<meta name="language" content="zh-CN">
+	<meta name="github" content="https://github.com/sun0225SUN/Awesome-Love-Code">
+	<meta name="describe" content="收集不易，您的star是我坚持的动力，同时也欢迎各位PR哦! ">
+	<link rel="icon" type="image/x-icon" href="https://cdn.jsdelivr.net/gh/sun0225SUN/photos/img/20210715233345.png">
+	<!-- 引入免费的开源云端楷体字体：霞鹜文楷 -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+	<style>
+		.continue-btn-container {
+			position: absolute;
+			bottom: 5%; /* 再往下一点，离底部5% */
+			width: 100%;
+			text-align: center;
+			z-index: 999;
+		}
+		.continue-btn {
+			padding: 12px 40px;
+			font-size: 20px;
+			background: linear-gradient(45deg, #ff69b4, #ff1493);
+			color: white;
+			border: none;
+			border-radius: 30px;
+			cursor: pointer;
+			box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+			font-family: 'LXGW WenKai Lite', '楷体', 'KaiTi', 'STKaiti', cursive;
+			transition: all 0.3s ease;
+		}
+		.continue-btn:hover {
+			transform: scale(1.05);
+			box-shadow: 0 0 30px rgba(255, 105, 180, 0.9);
+		}
+		
+		/* 霓虹爱心中间的文字样式 */
+		.heart-text-container {
+			position: absolute;
+			top: 50%; /* 利用绝对定位放到偏中上的位置，适配爱心形状 */
+			left: 50%;
+			transform: translate(-50%, -50%);
+			text-align: center;
+			z-index: 100;
+			pointer-events: none; /* 让鼠标穿透，不影响下面图层的内容 */
+		}
+		.heart-text {
+			color: #ffe6f0;
+			font-size: 40px;
+			font-family: 'LXGW WenKai Lite', '楷体', 'KaiTi', 'STKaiti', cursive;
+			font-weight: bold;
+			text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff1493, 0 0 30px #ff1493, 0 0 40px #ff1493;
+			margin: 0;
+			animation: breath 2s infinite alternate; /* 加个微弱的呼吸动画配合爱心跳动 */
+		}
+		@keyframes breath {
+			0% { transform: scale(0.95); opacity: 0.8; }
+			100% { transform: scale(1.05); opacity: 1; text-shadow: 0 0 15px #ff69b4, 0 0 30px #ff1493, 0 0 40px #ff1493, 0 0 50px #ff1493; }
+		}
+	</style>
+	<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+	<canvas id="canvas" width="1400" height="600"></canvas>
+
+	<!-- 在爱心中间加上文字 -->
+	<div class="heart-text-container">
+		<p class="heart-text">你同意了</p>
+	</div>
+
+	<div class="continue-btn-container">
+		<button class="continue-btn" onclick="fadeToNext()">继续</button>
+	</div>
+
+	<script>
+		function fadeToNext() {
+			var overlay = document.createElement('div');
+			overlay.style.position = 'fixed';
+			overlay.style.top = '0';
+			overlay.style.left = '0';
+			overlay.style.width = '100%';
+			overlay.style.height = '100%';
+			overlay.style.backgroundColor = '#000';
+			overlay.style.opacity = '0';
+			overlay.style.zIndex = '999999';
+			overlay.style.transition = 'opacity 1s ease';
+			document.body.appendChild(overlay);
+
+			// 延迟一帧渲染触发动画
+			setTimeout(function() {
+				overlay.style.opacity = '1';
+			}, 10);
+
+			// 动画结束后再跳转，完美掩盖加载时的白屏/黑闪
+			setTimeout(function() {
+				window.location.href = '../yinghua.html';
+			}, 1000);
+		}
+	</script>
+</body>
+<script src="js/script.js"></script>
+
+</html>
