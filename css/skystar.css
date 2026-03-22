@@ -1,6 +1,11 @@
 *{
     margin: 0;
     padding: 0;
+    /* 终极防翻车：消除苹果和安卓设备上默认的点击高亮、长按菜单和纯文本被意外选中，保持原生App般的沉浸感 */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 body {
     height: 100vh;
