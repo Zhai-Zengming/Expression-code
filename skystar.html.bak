@@ -79,7 +79,7 @@
     <audio id="bgm" src="video/KEY.L刘聪、$CC731 - MY BOO.mp3" autoplay loop></audio>
 
     <div class="confession-container">
-      <h1>杨敏 我喜欢你<br>你愿意做我女朋友吗</h1>
+      <h1>xxx 我喜欢你<br>你愿意做我女朋友吗</h1>
       <div class="buttons">
         <button id="btn-agree" onclick="goToNextPage()">同意</button>
         <button id="btn-disagree" disabled>不同意</button>
